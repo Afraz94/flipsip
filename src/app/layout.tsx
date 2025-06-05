@@ -20,7 +20,7 @@ export const metadata = {
       "Neon H₂O for Gen Z and Gen Alpha—because why should only AI evolve?",
     url: "https://flipsip.vercel.app/",
     images: ["https://flipsip.vercel.app/images/logo.png"], // Replace with your actual OG image URL
-    type: "product",
+    type: "website",
   },
   twitter: {
     card: "summary_large_image",

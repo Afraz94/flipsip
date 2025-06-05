@@ -1,26 +1,96 @@
 @import "tailwindcss";
+@config "../../tailwind.config.js";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+body {
+  background: linear-gradient(135deg, #110022 60%, #2b1155 100%);
+  color: #ededed;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+.neon-glow {
+  text-shadow: 0 0 12px #bc6cff, 0 0 32px #bc6cff99;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+.text-dark-foreground {
+  color: #bab2e7;
+}
+
+.animate-slidein {
+  animation: slidein 0.3s;
+}
+@keyframes slidein {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+.neon-glow {
+  text-shadow: 0 0 12px #bc6cff, 0 0 32px #bc6cff99;
+}
+
+.neon-icon {
+  filter: drop-shadow(0 0 8px #bc6cff) drop-shadow(0 0 18px #bc6cff88);
+}
+@keyframes shimmer {
+  0% {
+    background-position: -100px 0;
+  }
+  100% {
+    background-position: 300px 0;
+  }
+}
+.animate-shimmer {
+  background-size: 200px 100%;
+  background-repeat: no-repeat;
+  animation: shimmer 2.5s linear infinite;
+}
+
+.animate-fadein {
+  animation: fadein 0.3s;
+}
+@keyframes fadein {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.neon-outward-glow {
+  text-shadow: 0 0 8px #bc6cff, 0 0 16px #bc6cff, 0 0 32px #bc6cff,
+    0 0 48px #bc6cff, 0 0 64px #bc6cff, 0 0 96px #bc6cff;
+  filter: drop-shadow(0 0 16px #bc6cff) drop-shadow(0 0 48px #bc6cff);
+}
+
+.glow-focus:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px #bc6cff, 0 0 20px 6px #bc6cff99, 0 0 10px 3px #a77cff55;
+  border-color: #bc6cff !important;
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.neon-glow,
+.group-hover\:neon-glow:hover {
+  text-shadow: 0 0 12px #bc6cff, 0 0 32px #bc6cff44;
+  filter: brightness(1.1) drop-shadow(0 0 24px #bc6cff55);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-in {
+  animation: fade-in 0.18s;
 }

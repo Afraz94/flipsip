@@ -1,103 +1,230 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
+import Navbar from "./components/Navbar";
+import LoginModal from "./components/LoginModal";
+import OrderModal from "./components/OrderModal";
+import { signIn, signOut, useSession } from "next-auth/react";
+import { useUser } from "@/hooks/useUser";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faLightbulb,
+  faLeaf,
+  faBolt,
+  faFillDrip,
+  faRecycle,
+  faLock,
+  faThermometerHalf,
+  faSignature,
+  faCheckCircle,
+} from "@fortawesome/free-solid-svg-icons";
+import { motion } from "framer-motion";
+
+const features = [
+  {
+    title: "NeonTech™ Glow",
+    icon: faBolt,
+    desc: "Ultra-vibrant night-glow shell. Your bottle turns heads even in the dark.",
+    color: "text-pink-400",
+  },
+  {
+    title: "PureShield™ Tritan",
+    icon: faFillDrip,
+    desc: "Zero-odor, BPA-free, tough-as-steel. Unmatched taste, unbreakable style.",
+    color: "text-cyan-300",
+  },
+  {
+    title: "Eco-Smart Impact",
+    icon: faRecycle,
+    desc: "Every bottle = 20 fewer plastics in the ocean. 100% eco-forward.",
+    color: "text-green-300",
+  },
+];
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [showLogin, setShowLogin] = useState(false);
+  const [showOrder, setShowOrder] = useState(false);
+  const { data: session, status } = useSession();
+  const { user, loading: userLoading, mutate: refreshUser } = useUser();
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  async function handlePhoneUpdate(newPhone: String) {
+    if (!user?.email) return; // Email required for update
+    try {
+      const res = await fetch("/api/update-user-phone", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: user.email,
+          phone: newPhone,
+        }),
+      });
+      if (!res.ok) throw new Error("Failed to update phone");
+      // Optionally: refresh user from DB if needed
+      refreshUser();
+    } catch (err) {
+      console.error("Error updating phone:", err);
+    }
+  }
+
+  function handleShopNow() {
+    if (!session) setShowLogin(true);
+    else setShowOrder(true);
+  }
+
+  return (
+    <main className="relative flex flex-col items-center justify-center min-h-screen px-4 bg-gradient-to-br from-blackish via-flipsip to-dark pt-20">
+      {/* Neon blobs for atmosphere */}
+      <div className="fixed -z-10 inset-0 pointer-events-none">
+        <div className="absolute left-1/4 top-1/6 w-[380px] h-[320px] bg-neon opacity-15 blur-[100px] rounded-full animate-pulse" />
+        <div className="absolute right-1/6 bottom-1/5 w-[250px] h-[200px] bg-neon opacity-10 blur-[80px] rounded-full" />
+        <div className="absolute right-16 top-16 w-[80px] h-[80px] bg-neon opacity-40 blur-[24px] rounded-full animate-pulse" />
+      </div>
+      {/* Watermark Bottle Background */}
+      <div className="fixed inset-0 mt-48 flex items-center scale-[5] justify-center pointer-events-none select-none">
+        <img
+          src="/images/bottle.jpg"
+          alt=""
+          aria-hidden="true"
+          className="w-full h-full object-contain rotate-45 opacity-10 brightness-125"
+        />
+      </div>
+
+      {/* Navbar */}
+      <Navbar
+        user={user}
+        onLoginClick={() => setShowLogin(true)}
+        onLogout={() => signOut()}
+      />
+
+      {/* Hero Section */}
+      <section className="relative w-full flex flex-col items-center mt-10.5">
+        <h1 className="text-5xl md:text-7xl font-futuristic text-flipsip neon-glow text-center drop-shadow-lg select-none">
+          Flip<span className="text-white">Sip</span>
+        </h1>
+        {user && (
+          <div className="mt-6 text-lg text-neon neon-glow">
+            Welcome, {user.name?.split(" ")[0] || user.email?.split("@")[0]}!
+          </div>
+        )}
+        <a
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            handleShopNow();
+          }}
+          className="mt-8 -mb-6 px-10 py-3 rounded-full border-2 border-neon bg-blackish text-neon font-futuristic text-2xl transition-all duration-300 hover:bg-neon hover:cursor-pointer hover:text-black hover:scale-105 hover:shadow-[0_0_64px_12px_#bc6cff]"
+        >
+          Shop Now
+        </a>
+      </section>
+
+      {/* Features */}
+      <section
+        id="shop"
+        className="w-full max-w-5xl mt-20 grid grid-cols-1 md:grid-cols-3 gap-8"
+      >
+        {features.map((f, i) => (
+          <motion.div
+            key={f.title}
+            className="bg-blackish rounded-2xl p-8 text-center border-2 border-neon hover:scale-105 hover:cursor-pointer hover:shadow-neon transition-all duration-300 group relative overflow-hidden"
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: i * 0.12, type: "spring" }}
+            viewport={{ once: true }}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+            <div className="flex justify-center items-center mb-4">
+              <FontAwesomeIcon
+                icon={f.icon}
+                className={`text-4xl drop-shadow-lg neon-icon ${f.color} group-hover:animate-bounce`}
+              />
+            </div>
+            <h2
+              className={`text-neon text-xl font-futuristic mb-2 neon-glow group-hover:scale-110 group-hover:text-white transition-all duration-300`}
+            >
+              {f.title}
+            </h2>
+            <p className="text-purple-200">{f.desc}</p>
+            {/* Shimmer effect */}
+            <span className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-neon to-transparent animate-shimmer opacity-50"></span>
+          </motion.div>
+        ))}
+      </section>
+
+      {/* Bottle Information Section */}
+      <section className="max-w-3xl w-full mt-16 p-8 rounded-2xl bg-blackish/90 border-2 border-neon text-lg relative overflow-hidden">
+        <motion.h2
+          className="font-futuristic text-3xl text-neon neon-glow mb-4 text-center"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+        >
+          Why FlipSip Is the Ultimate Bottle
+        </motion.h2>
+        <ul className="list-none space-y-4 text-purple-300 font-medium">
+          <li className="flex items-center gap-3">
+            <FontAwesomeIcon
+              icon={faThermometerHalf}
+              className="text-cyan-400 neon-icon"
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+            <span>
+              24hr Cold/12hr Hot: Double-walled insulation locks in temperature.
+            </span>
+          </li>
+          <li className="flex items-center gap-3">
+            <FontAwesomeIcon
+              icon={faLeaf}
+              className="text-green-400 neon-icon"
+            />
+            <span>100% BPA-Free, non-toxic, vegan-friendly & sustainable.</span>
+          </li>
+          <li className="flex items-center gap-3">
+            <FontAwesomeIcon
+              icon={faLock}
+              className="text-yellow-300 neon-icon"
+            />
+            <span>Spill-proof SnapCap™ lid with one-hand open and lock.</span>
+          </li>
+          <li className="flex items-center gap-3">
+            <FontAwesomeIcon
+              icon={faSignature}
+              className="text-pink-400 neon-icon"
+            />
+            <span>Personalize your bottle: Laser-etch your name or logo.</span>
+          </li>
+          <li className="flex items-center gap-3">
+            <FontAwesomeIcon
+              icon={faCheckCircle}
+              className="text-neon neon-icon"
+            />
+            <span>
+              Designed & Made in India. Ships pan-India in eco-packaging.
+            </span>
+          </li>
+        </ul>
+        <div className="absolute top-0 right-0 w-32 h-32 bg-neon opacity-10 blur-[60px] rounded-full pointer-events-none" />
+      </section>
+
+      <footer className="mt-24 mb-4 text-center text-purple-300 font-futuristic text-sm opacity-70 neon-glow">
+        &copy; {new Date().getFullYear()} FlipSip. All rights reserved.
       </footer>
-    </div>
+
+      {/* Modals */}
+      <OrderModal
+        open={showOrder && !!user}
+        onClose={() => setShowOrder(false)}
+        user={user}
+        onUpdatePhone={handlePhoneUpdate}
+      />
+      <LoginModal
+        open={showLogin}
+        onClose={() => setShowLogin(false)}
+        // You can optionally pass onLogin if your modal needs it for custom flows
+        onLogin={() => {
+          setShowLogin(false);
+          setShowOrder(true);
+        }}
+      />
+    </main>
   );
 }

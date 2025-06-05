@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ---- NextAuth Required Models ----
+model User {
+  id             String    @id @default(cuid())
+  name           String?
+  email          String?   @unique
+  emailVerified  DateTime?
+  phone          String? 
+  image          String?
+  accounts       Account[]
+  sessions       Session[]
+  orders         Order[]
+}
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?   @db.Text
+  access_token       String?   @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?   @db.Text
+  session_state      String?
+  user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+enum OrderStatus {
+  PLACED
+  PACKED
+  IN_TRANSIT
+  DELIVERED
+  FAILED_IN_TRANSIT
+  FAILED_DELIVERY
+}
+
+model Order {
+  id            String      @id @default(uuid())
+  user          User        @relation(fields: [userId], references: [id])
+  userId        String
+
+  // Order details
+  fullName      String
+  email         String
+  phone         String
+  altPhone      String?
+  address1      String
+  address2      String?
+  landmark      String?
+  city          String
+  state         String
+  pincode       String
+  country       String
+  deliveryTime  String?
+  specialInstructions String?
+  giftMessage   String?
+  promoCode     String?
+  personalize   String?
+  size          String
+  quantity      Int
+
+  // Status and timestamps
+  createdAt     DateTime    @default(now())
+  status        OrderStatus @default(PLACED)
+  failedReason  String?
+}
+

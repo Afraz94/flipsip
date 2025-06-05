@@ -48,10 +48,11 @@ model Session {
 
 model VerificationToken {
   identifier String
-  token      String   @unique
+  token      String
   expires    DateTime
 
   @@unique([identifier, token])
+  @@id([identifier, token])
 }
 
 enum OrderStatus {
@@ -93,4 +94,3 @@ model Order {
   status        OrderStatus @default(PLACED)
   failedReason  String?
 }
-

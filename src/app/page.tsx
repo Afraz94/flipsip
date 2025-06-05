@@ -67,8 +67,11 @@ export default function Home() {
   }
 
   function handleShopNow() {
-    if (!session) setShowLogin(true);
-    else setShowOrder(true);
+    if (!session) {
+      setShowLogin(true);
+    } else {
+      setShowOrder(true);
+    }
   }
 
   return (

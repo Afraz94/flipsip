@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import type { User } from "./Navbar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

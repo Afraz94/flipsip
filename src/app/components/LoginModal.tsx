@@ -15,20 +15,6 @@ export default function LoginModal({
 }) {
   const [loading, setLoading] = useState(false);
 
-  function handleGoogleLogin() {
-    setLoading(true);
-    setTimeout(() => {
-      // Simulated "Google" user, no avatar (shows initials)
-      const user: User = {
-        name: "User",
-        avatar: "",
-        email: "",
-      };
-      onLogin(user);
-      setLoading(false);
-    }, 900);
-  }
-
   if (!open) return null;
 
   return (
@@ -47,6 +33,7 @@ export default function LoginModal({
         <button
           className="w-full mt-2 py-3 rounded-full bg-neon text-black font-futuristic text-lg neon-glow hover:scale-105 hover:cursor-pointer transition-all flex items-center justify-center gap-2 focus:ring-2 focus:ring-neon"
           onClick={() => {
+            setLoading(true);
             signIn("google");
           }}
           disabled={loading}

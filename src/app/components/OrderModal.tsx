@@ -212,7 +212,7 @@ export default function OrderModal({
     >
       <div
         className={`
-    h-full pb-4 max-h-screen flex flex-col gap-4 bg-blackish border-l-4 border-neon shadow-neon overflow-y-auto
+    h-full pb-16 max-h-screen flex flex-col gap-4 bg-blackish border-l-4 border-neon shadow-neon overflow-y-auto
     fixed right-0 top-0
     w-[90vw] max-w-lg sm:w-[80vw] md:w-[520px]
     min-h-screen

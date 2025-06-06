@@ -320,6 +320,7 @@ export default function Navbar({
           )}
         </div>
       )}
+      <span className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-neon to-transparent animate-shimmer opacity-50"></span>
     </nav>
   );
 }

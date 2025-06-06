@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import LoginModal from "./components/LoginModal";
 import OrderModal from "./components/OrderModal";
@@ -42,6 +42,7 @@ const features = [
 ];
 
 export default function Home() {
+  const isMobile = useIsMobile();
   const [showLogin, setShowLogin] = useState(false);
   const [showOrder, setShowOrder] = useState(false);
   const { data: session, status } = useSession();
@@ -64,6 +65,22 @@ export default function Home() {
     } catch (err) {
       console.error("Error updating phone:", err);
     }
+  }
+
+  function useIsMobile(breakpoint = 640) {
+    // Tailwind 'sm' breakpoint
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+      function check() {
+        setIsMobile(window.innerWidth < breakpoint);
+      }
+      check();
+      window.addEventListener("resize", check);
+      return () => window.removeEventListener("resize", check);
+    }, [breakpoint]);
+
+    return isMobile;
   }
 
   function handleShopNow() {
@@ -132,13 +149,17 @@ export default function Home() {
             className="bg-blackish rounded-2xl p-8 text-center border-2 border-neon hover:scale-105 hover:cursor-pointer hover:shadow-neon transition-all duration-300 group relative overflow-hidden"
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: i * 0.12, type: "spring" }}
+            transition={
+              isMobile
+                ? { duration: 0.2, type: "tween", delay: 0 }
+                : { duration: 0.6, delay: i * 0.12, type: "spring" }
+            }
             viewport={{ once: true }}
           >
             <div className="flex justify-center items-center mb-4">
               <FontAwesomeIcon
                 icon={f.icon}
-                className={`text-4xl drop-shadow-lg neon-icon ${f.color} group-hover:animate-bounce`}
+                className={`text-4xl drop-shadow-lg neon-icon ${f.color}`}
               />
             </div>
             <h2

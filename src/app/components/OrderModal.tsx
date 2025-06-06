@@ -212,7 +212,7 @@ export default function OrderModal({
     >
       <div
         className={`
-    h-full max-h-screen flex flex-col gap-4 bg-blackish border-l-4 border-neon shadow-neon overflow-y-auto
+    h-full pb-4 max-h-screen flex flex-col gap-4 bg-blackish border-l-4 border-neon shadow-neon overflow-y-auto
     fixed right-0 top-0
     w-[90vw] max-w-lg sm:w-[80vw] md:w-[520px]
     min-h-screen
@@ -382,14 +382,39 @@ export default function OrderModal({
           <option>500ml</option>
         </select>
         <label className="text-white">Quantity</label>
-        <input
-          type="number"
-          min={1}
-          className="p-2 rounded bg-dark border border-neon text-white glow-focus"
-          value={quantity}
-          onChange={(e) => setQuantity(Number(e.target.value))}
-          required
-        />
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+            className="px-2 py-0.5 bg-neon text-black rounded font-bold hover:cursor-pointer"
+            style={{ fontSize: 24 }}
+            aria-label="Decrease quantity"
+            tabIndex={0}
+          >
+            -
+          </button>
+          <input
+            type="number"
+            min={1}
+            className="w-16 text-center p-2 rounded bg-dark border border-neon text-white glow-focus"
+            value={quantity}
+            onChange={(e) => setQuantity(Math.max(1, Number(e.target.value)))}
+            required
+            inputMode="numeric"
+            pattern="[0-9]*"
+            aria-label="Quantity"
+          />
+          <button
+            type="button"
+            onClick={() => setQuantity((q) => q + 1)}
+            className="px-2 py-0.5 bg-neon text-black rounded font-bold hover:cursor-pointer"
+            style={{ fontSize: 24 }}
+            aria-label="Increase quantity"
+            tabIndex={0}
+          >
+            +
+          </button>
+        </div>
 
         <label className="text-white">Personalization (optional)</label>
         <input
@@ -399,7 +424,6 @@ export default function OrderModal({
           value={personalize}
           onChange={(e) => setPersonalize(e.target.value)}
         />
-
         <button
           className={`mt-3 px-6 py-3 rounded-full border-2 border-neon bg-neon text-black font-futuristic text-lg shadow-neon transition-all ${
             !isValid || loading

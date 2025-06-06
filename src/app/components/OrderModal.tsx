@@ -216,7 +216,7 @@ export default function OrderModal({
     fixed right-0 top-0
     w-[90vw] max-w-lg sm:w-[80vw] md:w-[520px]
     min-h-screen
-    px-4 py-8
+    p-5
     rounded-none sm:rounded-l-2xl
     transition-all duration-300
     ${
@@ -241,7 +241,7 @@ export default function OrderModal({
             className="neon-outward-glow text-neon text-2xl"
           />
         </button>
-        <h2 className="text-neon font-futuristic text-2xl neon-glow mb-2">
+        <h2 className="text-neon font-futuristic font-semibold text-pretty text-xl neon-glow mb-2">
           Place Your FlipSip Order
         </h2>
 
@@ -401,7 +401,7 @@ export default function OrderModal({
         />
 
         <button
-          className={`mt-6 px-6 py-3 rounded-full border-2 border-neon bg-neon text-black font-futuristic text-lg shadow-neon transition-all ${
+          className={`mt-3 px-6 py-3 rounded-full border-2 border-neon bg-neon text-black font-futuristic text-lg shadow-neon transition-all ${
             !isValid || loading
               ? "opacity-60 cursor-not-allowed"
               : "hover:scale-105 hover:cursor-pointer"

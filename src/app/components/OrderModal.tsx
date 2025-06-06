@@ -57,6 +57,24 @@ export default function OrderModal({
     }
   }, [open]);
 
+  useEffect(() => {
+    if (open) {
+      // Prevent background scroll
+      document.body.style.overflow = "hidden";
+      // On iOS, also consider position: fixed for rare issues
+      document.body.style.position = "relative";
+      window.scrollTo(0, 0); // Optional: Prevent jump
+    } else {
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+    }
+    // Clean up on unmount
+    return () => {
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+    };
+  }, [open]);
+
   // Prefill name/email/phone if user changes (for SWR or session updates)
   useEffect(() => {
     if (user?.name) setFullName(user.name);
@@ -194,21 +212,23 @@ export default function OrderModal({
     >
       <div
         className={`
-          h-full flex flex-col gap-4 bg-blackish border-l-4 border-neon shadow-neon overflow-auto
-          fixed right-0 top-0
-          w-[92.5vw] max-w-lg sm:w-[80vw] md:w-[520px]
-          min-h-screen
-          px-4 py-6 md:p-8
-          rounded-none sm:rounded-l-2xl
-          transition-all duration-300
-          ${
-            panelVisible
-              ? "translate-x-0 opacity-100"
-              : "translate-x-full opacity-0 pointer-events-none"
-          }
-        `}
+    h-full max-h-screen flex flex-col gap-4 bg-blackish border-l-4 border-neon shadow-neon overflow-y-auto
+    fixed right-0 top-0
+    w-[90vw] max-w-lg sm:w-[80vw] md:w-[520px]
+    min-h-screen
+    px-3 py-4 md:p-8
+    rounded-none sm:rounded-l-2xl
+    transition-all duration-300
+    ${
+      panelVisible
+        ? "translate-x-0 opacity-100"
+        : "translate-x-full opacity-0 pointer-events-none"
+    }
+  `}
         style={{
           boxShadow: "0 0 64px 0 #bc6cff44, 0 2px 32px #12121266",
+          overflowY: "auto",
+          maxHeight: "100vh",
         }}
       >
         <button

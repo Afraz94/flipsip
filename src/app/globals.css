@@ -94,3 +94,14 @@ body {
 .animate-fade-in {
   animation: fade-in 0.18s;
 }
+
+html,
+body {
+  overscroll-behavior: none; /* Prevent scrolling bounce on mobile */
+  height: 100%;
+}
+
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+}

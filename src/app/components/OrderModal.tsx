@@ -212,7 +212,7 @@ export default function OrderModal({
     >
       <div
         className={`
-    h-full pb-16 max-h-screen flex flex-col gap-4 bg-blackish border-l-4 border-neon shadow-neon overflow-y-auto
+    h-full pb-20 max-h-screen flex flex-col gap-4 bg-blackish border-l-4 border-neon shadow-neon overflow-y-auto
     fixed right-0 top-0
     w-[90vw] max-w-lg sm:w-[80vw] md:w-[520px]
     min-h-screen
@@ -344,13 +344,13 @@ export default function OrderModal({
           disabled
         />
 
-        <label className="text-white">Preferred Delivery Time (optional)</label>
+        {/* <label className="text-white">Preferred Delivery Time (optional)</label>
         <input
           type="text"
           className="p-2 rounded bg-dark border border-neon text-white glow-focus"
           value={deliveryTime}
           onChange={(e) => setDeliveryTime(e.target.value)}
-        />
+        /> */}
 
         <label className="text-white">Special Instructions (optional)</label>
         <textarea

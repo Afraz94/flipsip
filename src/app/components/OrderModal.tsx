@@ -216,7 +216,7 @@ export default function OrderModal({
     fixed right-0 top-0
     w-[90vw] max-w-lg sm:w-[80vw] md:w-[520px]
     min-h-screen
-    px-3 py-4 md:p-8
+    px-4 py-8
     rounded-none sm:rounded-l-2xl
     transition-all duration-300
     ${

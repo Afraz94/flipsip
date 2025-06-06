@@ -105,3 +105,17 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
 }
+
+/* Remove spinners from number inputs (all browsers) */
+input[type="number"] {
+  appearance: textfield; /* Standard */
+  -webkit-appearance: none; /* Chrome, Safari, Opera */
+  -moz-appearance: textfield; /* Firefox */
+}
+
+/* Further hide inner/outer spin buttons on WebKit browsers */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

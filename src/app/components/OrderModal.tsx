@@ -10,7 +10,7 @@ export default function OrderModal({
   open,
   onClose,
   user,
-  onUpdatePhone, // <- Add this prop for updating in SQL DB
+  onUpdatePhone,
 }: {
   open: boolean;
   onClose: () => void;
